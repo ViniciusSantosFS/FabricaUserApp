@@ -1,28 +1,24 @@
 import React, { useState } from "react";
 import {
   View,
-  Text,
   TouchableOpacity,
   StyleSheet,
   ScrollView,
   Image,
 } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-
-import { useNavigation } from "@react-navigation/native";
 
 import PersonModal from "../components/PersonModal";
+import AddUser from "./AddUser";
 
 export default function Home() {
-  const navigation = useNavigation();
-
-  const friends = [
+  const [friends, setFriends] = useState([
     {
       id: "1",
       name: "jose",
       age: "21",
       uri: "https://randomuser.me/api/portraits/men/32.jpg",
     },
+
     {
       id: "2",
       name: "lucas",
@@ -41,11 +37,10 @@ export default function Home() {
       age: "40",
       uri: "https://uifaces.co/our-content/donated/3799Ffxy.jpeg",
     },
-  ];
+  ]);
 
   const [modalState, setModalState] = useState(false);
   const [currentPersonId, setCurrentPersonId] = useState(null);
-  const [people, setPeople] = useState(friends);
 
   const isModalVisible = () => {
     setModalState(!modalState);
@@ -57,18 +52,18 @@ export default function Home() {
   };
 
   const removeFriend = () => {
-    const newList = people.filter((person) => {
+    const newList = friends.filter((person) => {
       return person.id !== currentPersonId;
     });
 
-    setPeople(newList);
+    setFriends(newList);
     isModalVisible();
   };
 
   return (
     <View style={styles.container}>
-      <ScrollView horizontal>
-        {people.map((person) => (
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        {friends.map((person) => (
           <View key={person.id}>
             <TouchableOpacity
               onPress={() => selectId(person.id)}
@@ -92,16 +87,7 @@ export default function Home() {
         ))}
       </ScrollView>
 
-      <TouchableOpacity
-        onPress={() => navigation.navigate("Adicionar")}
-        style={styles.navigationIconContainer}
-      >
-        <MaterialCommunityIcons
-          name="arrow-right-bold-circle-outline"
-          size={50}
-          color="#122253"
-        />
-      </TouchableOpacity>
+      <AddUser setFriends={setFriends} friends={friends} />
     </View>
   );
 }
@@ -109,6 +95,7 @@ export default function Home() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginBottom: 20,
   },
 
   imagesContainer: {
